@@ -2,524 +2,1112 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>HAN JIN-YI · Portfolio 2026</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HAN JIN-YI — HR Problem Solver · 2026</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <style>
-  @import "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css";
-
-  :root{
-    --bg:#0A0A0A;
-    --bg-alt:#111111;
-    --bg-card:#161616;
-    --text-primary:#F0F0F0;
-    --text-secondary:#888888;
-    --accent:#39FF14;
-    --border:#222222;
+  @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-alt: #111111;
+    --bg-card: #161616;
+    --text-primary: #F0F0F0;
+    --text-secondary: #888888;
+    --accent: #39FF14;
+    --border: #222222;
   }
 
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--bg);color:var(--text-primary);font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  html{scroll-behavior:smooth}
-  body{overflow-x:hidden;cursor:none}
-  a{color:inherit;text-decoration:none}
-  ::selection{background:var(--accent);color:#000}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text-primary); }
+  body {
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-feature-settings: "ss03", "ss06";
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  ::selection { background: var(--accent); color: #000; }
 
-  /* Scroll progress */
-  .scroll-progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:9999;will-change:width}
+  a { color: inherit; text-decoration: none; cursor: none; }
+  button { font-family: inherit; cursor: none; background: none; border: none; color: inherit; }
 
-  /* Cursor */
-  .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:10000;mix-blend-mode:difference}
-  .cursor-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;transform:translate(-50%,-50%);transition:background .25s ease}
-  .cursor-ring{width:36px;height:36px;border:1.5px solid rgba(57,255,20,.5);border-radius:50%;transform:translate(-50%,-50%);transition:width .25s ease,height .25s ease,background .25s ease,border-color .25s ease}
-  .cursor-ring.hovered{width:52px;height:52px;background:var(--accent);border-color:var(--accent)}
-  .cursor-dot.hovered{background:#000}
+  /* ------- Scroll progress bar ------- */
+  .scroll-progress {
+    position: fixed; inset: 0 auto auto 0;
+    height: 2px; width: 0%;
+    background: var(--accent);
+    z-index: 9999;
+    transition: width 0.05s linear;
+  }
 
-  /* Ghost grid */
-  .ghost-grid{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(90deg,#fff 0 1px,transparent 1px 80px),repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 80px);opacity:.03;z-index:1}
+  /* ------- Custom cursor ------- */
+  .cursor-dot, .cursor-ring {
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    will-change: transform;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(57, 255, 20, 0.5);
+    border-radius: 50%;
+    transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring.is-hover {
+    width: 52px; height: 52px;
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .cursor-dot.is-hover { background: #000; }
+  @media (max-width: 768px) {
+    body { cursor: auto; }
+    a, button { cursor: pointer; }
+    .cursor-dot, .cursor-ring { display: none; }
+  }
 
-  /* Layout */
-  .wrap{max-width:1440px;margin:0 auto;padding:0 56px;position:relative}
-  @media (max-width:768px){.wrap{padding:0 24px}}
+  /* ------- Layout primitives ------- */
+  .wrap {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 56px;
+  }
+  @media (max-width: 768px) { .wrap { padding: 0 24px; } }
 
-  /* Top bar */
-  .topbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 56px;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;mix-blend-mode:difference}
-  .topbar .brand{color:var(--accent)}
-  .topbar nav{display:flex;gap:28px}
-  .topbar nav a{color:#F0F0F0;opacity:.7;transition:opacity .25s}
-  .topbar nav a:hover{opacity:1;color:var(--accent)}
-  @media (max-width:768px){.topbar{padding:18px 24px}.topbar nav{display:none}}
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-label::before {
+    content: "";
+    width: 28px; height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
 
-  /* ===== HERO ===== */
-  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 56px 160px;overflow:hidden}
-  @media (max-width:768px){.hero{padding:100px 24px 120px;min-height:100vh}}
+  .display {
+    font-size: clamp(56px, 8.5vw, 100px);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+  .display .accent { color: var(--accent); }
+  .display .muted { color: var(--text-secondary); }
 
-  .hero-meta{position:absolute;top:80px;left:56px;right:56px;display:flex;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;z-index:3}
-  .hero-meta .role{color:var(--accent)}
-  .hero-meta .year{color:var(--text-secondary)}
-  @media (max-width:768px){.hero-meta{top:70px;left:24px;right:24px}}
+  /* ------- TOP NAV ------- */
+  .top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 22px 56px;
+    display: flex; justify-content: space-between; align-items: center;
+    mix-blend-mode: difference;
+    pointer-events: none;
+  }
+  .top-nav > * { pointer-events: auto; }
+  .top-nav .mark {
+    font-weight: 900; font-size: 14px; letter-spacing: 0.04em;
+    color: #fff;
+  }
+  .top-nav .mark span { color: var(--accent); }
+  .top-nav .nav-links { display: flex; gap: 28px; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color:#fff;}
+  .top-nav .nav-links a { position: relative; }
+  .top-nav .nav-links a::after {
+    content:""; position:absolute; left:0; right:0; bottom:-6px; height:1px;
+    background: var(--accent); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s cubic-bezier(.7,0,.2,1);
+  }
+  .top-nav .nav-links a:hover::after { transform: scaleX(1); }
+  @media (max-width: 768px) {
+    .top-nav { padding: 18px 24px; }
+    .top-nav .nav-links { display: none; }
+  }
 
-  .hero-title{position:relative;z-index:3;font-weight:900;line-height:.88;letter-spacing:-.05em;font-size:clamp(72px,12vw,140px);color:var(--text-primary)}
-  .hero-title .line{display:block;overflow:hidden}
-  .hero-title .line span{display:inline-block;will-change:transform,clip-path;clip-path:inset(0 0 100% 0);transform:translateY(0)}
-  .hero-title .ampersand{color:var(--accent);font-style:italic;font-weight:400}
-  .hero-title .dot{color:var(--accent)}
+  /* ===================== HERO ===================== */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 720px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 0 56px;
+    overflow: hidden;
+  }
+  .hero::before {
+    content:"";
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(240,240,240,0.06) 0 1px, transparent 1px 80px),
+      repeating-linear-gradient(0deg, rgba(240,240,240,0.04) 0 1px, transparent 1px 80px);
+    opacity: 0.5;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    width: 520px; height: 520px;
+    right: -120px; top: 40%;
+    background: radial-gradient(circle, rgba(57,255,20,0.10), transparent 60%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
 
-  .hero-foot{position:absolute;bottom:140px;left:56px;right:56px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;z-index:3}
-  .hero-foot .bio{max-width:460px;color:var(--text-secondary);font-size:15px;line-height:1.7;opacity:0}
-  .hero-foot .bio strong{color:var(--text-primary);font-weight:700}
-  .hero-foot .scroll{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);opacity:0}
-  .hero-foot .scroll .arrow{display:inline-block;animation:bob 1.6s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-  @media (max-width:768px){.hero-foot{bottom:120px;left:24px;right:24px;flex-direction:column;align-items:flex-start}.hero-foot .scroll{align-self:flex-end}}
+  .hero-meta-top,
+  .hero-meta-bottom {
+    position: absolute; left: 56px; right: 56px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 24px;
+  }
+  .hero-meta-top { top: 96px; }
+  .hero-meta-bottom { bottom: 110px; }
 
-  /* Marquee */
-  .marquee{position:relative;background:var(--accent);color:#000;overflow:hidden;border-top:1px solid #000;border-bottom:1px solid #000;z-index:5}
-  .marquee-track{display:flex;gap:48px;padding:22px 0;white-space:nowrap;animation:marquee 28s linear infinite;font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:20px;will-change:transform}
-  .marquee-track span{display:inline-flex;align-items:center;gap:48px}
-  .marquee-track .star{color:#000;opacity:.85}
-  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .meta-title {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.25em;
+    color: var(--accent);
+  }
+  .meta-year {
+    font-size: 11px; font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.2em;
+    text-align: right;
+    display: flex; flex-direction: column; gap: 4px;
+    align-items: flex-end;
+  }
+  .meta-year .big { color: var(--text-primary); font-size: 14px; letter-spacing: 0.04em; }
 
-  /* ===== SECTION SHARED ===== */
-  section.block{position:relative;padding:160px 0;border-top:1px solid var(--border)}
-  @media (max-width:768px){section.block{padding:100px 0}}
-  .label{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:12px;margin-bottom:48px}
-  .label::before{content:"";width:32px;height:1px;background:var(--accent);display:inline-block}
-  .display{font-size:clamp(54px,8vw,100px);font-weight:900;line-height:.92;letter-spacing:-.04em;color:var(--text-primary)}
-  .display .accent{color:var(--accent)}
-  .display .gap{display:inline-block;width:.5em}
-  .display .italic{font-style:italic;font-weight:400;color:var(--text-secondary)}
+  .hero-bio {
+    max-width: 380px;
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-secondary);
+  }
+  .hero-bio b { color: var(--text-primary); font-weight: 600; }
 
-  /* ===== ABOUT ===== */
-  .about-grid{display:grid;grid-template-columns:5fr 7fr;gap:80px;margin-top:80px;align-items:start}
-  @media (max-width:768px){.about-grid{grid-template-columns:1fr;gap:48px}}
-  .about-quote{border-left:2px solid var(--accent);padding:8px 0 8px 28px;font-size:22px;line-height:1.5;font-weight:500;color:var(--text-primary)}
-  .about-quote em{color:var(--accent);font-style:normal;font-weight:700}
-  .about-body{font-size:16px;line-height:1.9;color:var(--text-secondary);max-width:580px}
-  .about-body p+p{margin-top:20px}
-  .about-body strong{color:var(--text-primary);font-weight:600}
+  .scroll-cue {
+    display: flex; flex-direction: column; align-items: flex-end;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.25em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    gap: 14px;
+  }
+  .scroll-cue .arrow {
+    width: 1px; height: 48px; background: var(--text-secondary);
+    position: relative; animation: cueDrop 2.2s infinite ease-in-out;
+  }
+  .scroll-cue .arrow::after {
+    content:""; position:absolute; bottom:0; left:50%;
+    width:7px; height:7px; border-right: 1px solid var(--text-secondary);
+    border-bottom: 1px solid var(--text-secondary);
+    transform: translate(-50%, 50%) rotate(45deg);
+  }
+  @keyframes cueDrop {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
 
-  .strengths{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);margin-top:96px;border:1px solid var(--border)}
-  @media (max-width:768px){.strengths{grid-template-columns:1fr}}
-  .strength{background:var(--bg-card);padding:40px 36px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;position:relative;transition:background .35s ease}
-  .strength:hover{background:#1c1c1c}
-  .strength .num{font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--accent)}
-  .strength h3{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.25;color:var(--text-primary);margin-top:16px}
-  .strength p{font-size:14px;line-height:1.7;color:var(--text-secondary);margin-top:14px}
+  .hero-name {
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    font-size: clamp(80px, 14.5vw, 200px);
+  }
+  .hero-name .line {
+    display: block;
+    overflow: hidden;
+  }
+  .hero-name .inner {
+    display: inline-block;
+    clip-path: inset(0 0 100% 0);
+    will-change: clip-path, transform;
+  }
+  .hero-name .accent { color: var(--accent); }
+  .hero-name .stop { color: var(--accent); }
+  .hero-name .small {
+    font-size: 0.42em;
+    vertical-align: top;
+    color: var(--text-secondary);
+    letter-spacing: 0;
+    margin-left: 0.25em;
+    font-weight: 700;
+  }
 
-  /* ===== WORKS ===== */
-  .works-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
-  .works-head .meta{font-size:13px;color:var(--text-secondary);text-align:right;max-width:280px;line-height:1.6}
-  .works-head .meta b{display:block;color:var(--text-primary);font-weight:700;font-size:14px;margin-bottom:6px}
+  .hero-tagline {
+    margin-top: 28px;
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 12px; font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .hero-tagline span:not(:last-child)::after {
+    content: "/"; margin-left: 16px; color: var(--accent);
+  }
 
-  .work-list{margin-top:96px;border-top:1px solid var(--border)}
-  .work-row{position:relative;display:grid;grid-template-columns:80px 1fr 280px 80px;align-items:center;gap:40px;padding:36px 24px;border-bottom:1px solid var(--border);overflow:hidden;cursor:none}
-  .work-row::before{content:"";position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.7,.05,.25,1);z-index:0}
-  .work-row:hover::before{transform:scaleX(1)}
-  .work-row>*{position:relative;z-index:1;transition:color .3s ease}
-  .work-row:hover *{color:#000 !important}
-  .work-row .idx{font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--text-secondary)}
-  .work-row .title{font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--text-primary);line-height:1.15}
-  .work-row .title .sub{display:block;font-size:13px;font-weight:500;letter-spacing:.06em;color:var(--text-secondary);text-transform:uppercase;margin-top:8px}
-  .work-row .tags{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em}
-  .work-row .tags span{padding:5px 10px;border:1px solid var(--border);border-radius:999px}
-  .work-row .arrow{font-size:24px;color:var(--accent);text-align:right;font-weight:300}
-  @media (max-width:768px){.work-row{grid-template-columns:1fr;gap:14px;padding:28px 16px}.work-row .arrow,.work-row .idx{font-size:11px}.work-row .title{font-size:24px}}
+  @media (max-width: 768px) {
+    .hero { padding: 0 24px; min-height: 640px; height: 100svh; }
+    .hero-meta-top { top: 80px; left: 24px; right: 24px; }
+    .hero-meta-bottom { bottom: 80px; left: 24px; right: 24px; flex-direction: column; }
+    .hero-bio { max-width: none; }
+    .scroll-cue { align-items: flex-start; flex-direction: row; gap: 12px; }
+    .scroll-cue .arrow { width: 30px; height: 1px; }
+    .scroll-cue .arrow::after {
+      bottom: auto; left: auto; right: 0; top: 50%;
+      transform: translate(50%, -50%) rotate(-45deg);
+      border-bottom: none; border-left: 1px solid var(--text-secondary);
+    }
+    @keyframes cueDrop {
+      0%, 100% { transform: translateX(0); opacity: 0.6; }
+      50% { transform: translateX(8px); opacity: 1; }
+    }
+  }
 
-  /* KPI spotlight */
-  .kpi-spotlight{margin-top:120px;background:var(--bg-alt);border:1px solid var(--border);padding:80px 64px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:64px;position:relative;overflow:hidden}
-  .kpi-spotlight::after{content:"KPI";position:absolute;right:-20px;bottom:-60px;font-size:220px;font-weight:900;letter-spacing:-.06em;color:var(--text-primary);opacity:.025;line-height:1}
-  @media (max-width:768px){.kpi-spotlight{grid-template-columns:1fr;padding:48px 28px;gap:40px}}
-  .kpi{position:relative;z-index:1}
-  .kpi .num{font-size:96px;font-weight:900;letter-spacing:-.05em;line-height:1;color:var(--accent);display:flex;align-items:baseline;gap:6px}
-  .kpi .num .unit{font-size:32px;color:var(--text-primary);font-weight:800}
-  .kpi h4{font-size:16px;font-weight:700;color:var(--text-primary);margin-top:18px;letter-spacing:-.01em}
-  .kpi p{font-size:13px;color:var(--text-secondary);margin-top:8px;line-height:1.7;max-width:300px}
+  /* ===================== MARQUEE ===================== */
+  .marquee {
+    position: relative;
+    background: var(--accent);
+    color: #000;
+    border-top: 1px solid var(--accent);
+    border-bottom: 1px solid var(--accent);
+    overflow: hidden;
+    padding: 18px 0;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 56px;
+    white-space: nowrap;
+    animation: marquee 28s linear infinite;
+    width: max-content;
+  }
+  .marquee-track span {
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 56px;
+  }
+  .marquee-track span::after {
+    content: "✦";
+    font-size: 14px;
+    color: #000;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 
-  /* ===== EXPERIENCE ===== */
-  .timeline{margin-top:72px;border-top:1px solid var(--border)}
-  .tl-row{display:grid;grid-template-columns:180px 1fr 1fr;gap:56px;padding:48px 0;border-bottom:1px solid var(--border);align-items:start}
-  @media (max-width:768px){.tl-row{grid-template-columns:1fr;gap:14px;padding:32px 0}}
-  .tl-date{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--text-secondary);font-variant-numeric:tabular-nums;padding-top:6px}
-  .tl-role h4{font-size:24px;font-weight:800;letter-spacing:-.02em;color:var(--text-primary);line-height:1.25}
-  .tl-role .org{display:block;font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
-  .tl-bullets{font-size:14px;line-height:1.85;color:var(--text-secondary);list-style:none}
-  .tl-bullets li{position:relative;padding-left:18px}
-  .tl-bullets li+li{margin-top:8px}
-  .tl-bullets li::before{content:"";position:absolute;left:0;top:11px;width:6px;height:1px;background:var(--accent)}
-  .tl-bullets li strong{color:var(--text-primary);font-weight:600}
+  /* ===================== SECTION SHELL ===================== */
+  section.block {
+    padding: 160px 0;
+    position: relative;
+  }
+  section.block + section.block { border-top: 1px solid var(--border); }
+  .section-head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 60px;
+    margin-bottom: 90px;
+  }
+  .section-head .num {
+    font-size: 12px; font-weight: 700; color: var(--text-secondary);
+    letter-spacing: 0.2em;
+  }
+  .section-display {
+    font-size: clamp(56px, 8vw, 96px);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+  .section-display .gap { display: inline-block; width: 0.35em; }
+  @media (max-width: 768px) {
+    section.block { padding: 110px 0; }
+    .section-head { flex-direction: column; align-items: flex-start; margin-bottom: 60px; }
+  }
 
-  .sub-h{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text-secondary);margin-top:96px;margin-bottom:24px}
+  /* ===================== 01 ABOUT ===================== */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 100px;
+    align-items: flex-start;
+  }
+  @media (max-width: 980px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+  .about-left .label { font-size: 12px; color: var(--text-secondary); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px; font-weight: 700; }
+  .about-left .info-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .about-left .info-row:first-of-type { border-top: 1px solid var(--border); }
+  .about-left .info-row dt { color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; padding-top: 2px; }
+  .about-left .info-row dd { color: var(--text-primary); font-weight: 500; }
+  .about-left .info-row dd a:hover { color: var(--accent); }
+
+  .quote {
+    border-left: 2px solid var(--accent);
+    padding: 4px 0 4px 24px;
+    margin-bottom: 36px;
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-weight: 700;
+    line-height: 1.45;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+  .quote em { color: var(--accent); font-style: normal; }
+
+  .about-body {
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--text-secondary);
+    margin-bottom: 56px;
+    max-width: 640px;
+  }
+  .about-body b { color: var(--text-primary); font-weight: 600; }
+
+  .strengths {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .strength {
+    background: var(--bg-card);
+    padding: 32px 28px;
+    position: relative;
+    transition: background 0.4s;
+  }
+  .strength:hover { background: #1c1c1c; }
+  .strength .num {
+    font-size: 11px; font-weight: 800; color: var(--accent);
+    letter-spacing: 0.2em; margin-bottom: 28px;
+  }
+  .strength h3 {
+    font-size: 20px; font-weight: 800;
+    line-height: 1.25; margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .strength p {
+    font-size: 13.5px; line-height: 1.7; color: var(--text-secondary);
+  }
+  @media (max-width: 600px) { .strengths { grid-template-columns: 1fr; } }
+
+  /* ===================== 02 WORKS ===================== */
+  .works {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 80px;
+  }
+  .work {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    gap: 40px;
+    align-items: center;
+    padding: 36px 24px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    transition: color 0.3s;
+  }
+  .work:last-child { border-bottom: none; }
+  .work::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.5s cubic-bezier(.7,0,.2,1);
+    z-index: 0;
+  }
+  .work:hover::before { transform: scaleX(1); }
+  .work > * { position: relative; z-index: 1; transition: color 0.3s; }
+  .work:hover, .work:hover .w-meta, .work:hover .w-tags span { color: #000; }
+  .work:hover .w-tags span { border-color: #000; }
+  .work:hover .w-arrow { color: #000; transform: translateX(8px); }
+
+  .w-num {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.15em;
+    color: var(--text-secondary);
+  }
+  .w-title { font-size: clamp(28px, 3.5vw, 44px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.05; }
+  .w-meta { display: flex; gap: 14px; margin-top: 12px; color: var(--text-secondary); font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .w-meta span:not(:last-child)::after { content: "·"; margin-left: 14px; color: var(--accent); }
+  .work:hover .w-meta span:not(:last-child)::after { color: #000; }
+  .w-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .w-tags span {
+    display: inline-block; padding: 4px 10px;
+    border: 1px solid var(--border);
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 600; color: var(--text-secondary);
+    border-radius: 999px;
+  }
+  .w-arrow {
+    font-size: 28px; font-weight: 300; color: var(--accent);
+    transition: transform 0.4s ease, color 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    .work { grid-template-columns: 1fr; gap: 12px; padding: 28px 16px; }
+    .w-arrow { justify-self: flex-end; }
+  }
+
+  /* KPI spotlight block */
+  .kpi-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 32px;
+  }
+  .kpi {
+    background: var(--bg-alt);
+    padding: 44px 32px;
+    position: relative;
+  }
+  .kpi .num {
+    font-size: clamp(48px, 6vw, 76px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: inline-flex; align-items: flex-start;
+  }
+  .kpi .unit {
+    font-size: 0.35em;
+    color: var(--text-secondary);
+    margin-left: 6px;
+    margin-top: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .kpi .desc {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .kpi .desc b { color: var(--text-primary); font-weight: 700; display: block; margin-bottom: 4px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+  @media (max-width: 900px) { .kpi-block { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .kpi-block { grid-template-columns: 1fr; } }
+
+  /* ===================== 03 EXPERIENCE ===================== */
+  .timeline { border-top: 1px solid var(--border); }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 80px;
+    padding: 56px 24px;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    position: relative;
+  }
+  .tl-row::before {
+    content: ""; position: absolute;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    left: -4px; top: 64px;
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+  .tl-date {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .tl-date .tag {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    padding: 3px 8px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    border-radius: 999px;
+  }
+  .tl-body h3 {
+    font-size: 28px; font-weight: 800;
+    margin-bottom: 6px; letter-spacing: -0.02em;
+  }
+  .tl-body .org {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .tl-bullets {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 14px;
+    max-width: 720px;
+  }
+  .tl-bullets li {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    padding-left: 22px;
+    position: relative;
+  }
+  .tl-bullets li::before {
+    content: ""; position: absolute;
+    left: 0; top: 11px;
+    width: 8px; height: 1px;
+    background: var(--accent);
+  }
+  .tl-bullets li b { color: var(--text-primary); font-weight: 600; }
+  .tl-bullets li .hl { color: var(--accent); font-weight: 700; }
+
+  @media (max-width: 768px) {
+    .tl-row { grid-template-columns: 1fr; gap: 18px; padding: 40px 16px; }
+    .tl-row::before { display: none; }
+  }
 
   /* Skills grid */
-  .skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:80px}
-  @media (max-width:768px){.skills-grid{grid-template-columns:1fr;gap:48px}}
-  .skill-col h5{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.18em;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
-  .skill-list{display:flex;flex-direction:column;gap:14px}
-  .skill-list .item{display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:600;color:var(--text-primary);letter-spacing:-.01em}
-  .skill-list .item .lvl{display:flex;gap:5px}
-  .skill-list .item .lvl i{width:8px;height:8px;background:var(--border);border-radius:50%;display:inline-block}
-  .skill-list .item .lvl i.on{background:var(--accent)}
-  .tools-flow{display:flex;flex-wrap:wrap;gap:10px}
-  .tools-flow span{font-size:13px;font-weight:600;color:var(--text-secondary);padding:8px 14px;border:1px solid var(--border);border-radius:999px;transition:all .25s}
-  .tools-flow span:hover{border-color:var(--accent);color:var(--accent)}
-
-  /* ===== CONTACT ===== */
-  .contact{padding:200px 0 80px;position:relative;border-top:1px solid var(--border)}
-  @media (max-width:768px){.contact{padding:120px 0 80px}}
-  .contact .display{margin-top:36px}
-  .contact .display .lt{display:block}
-  .contact .display .lt2{display:block}
-
-  .contact-grid{margin-top:80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end}
-  @media (max-width:768px){.contact-grid{grid-template-columns:1fr;gap:48px}}
-  .contact-info{font-size:14px;line-height:2;color:var(--text-secondary)}
-  .contact-info .row{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:14px 0;font-weight:500}
-  .contact-info .row .k{color:var(--text-secondary);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
-  .contact-info .row .v{color:var(--text-primary);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-
-  .magnetic-wrap{justify-self:end;align-self:start;perspective:600px}
-  @media (max-width:768px){.magnetic-wrap{justify-self:start}}
-  .magnetic{display:inline-flex;align-items:center;gap:18px;background:var(--accent);color:#000;padding:32px 44px;border-radius:999px;font-size:18px;font-weight:800;letter-spacing:.02em;text-transform:uppercase;will-change:transform;transition:background .3s,color .3s;cursor:none}
-  .magnetic .arrow{font-size:24px;font-weight:300;transition:transform .3s}
-  .magnetic:hover .arrow{transform:translate(4px,-4px)}
-
-  /* Footer */
-  footer{padding:48px 56px 32px;display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary);font-weight:700;border-top:1px solid var(--border)}
-  @media (max-width:768px){footer{padding:32px 24px;flex-direction:column;gap:14px;align-items:flex-start}}
-  footer .dot{color:var(--accent);margin:0 10px}
-
-  /* Reveal helpers (initial state for GSAP) */
-  .reveal-y{opacity:0;transform:translateY(60px)}
-  .reveal-y-sm{opacity:0;transform:translateY(30px)}
-  .reveal-x{opacity:0;transform:translateX(-20px)}
-
-  @media (max-width:768px){
-    body{cursor:auto}
-    .cursor-dot,.cursor-ring{display:none}
-    *{cursor:auto !important}
+  .skills-block {
+    margin-top: 90px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
   }
-</style>
-
-<style id="__print-overrides">
-  /* Force backgrounds/colors in print */
-  *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-  /* Hide interactive chrome */
-  .scroll-progress, .cursor-dot, .cursor-ring, .topbar { display: none !important; }
-
-  /* Repair direct-edit breakages so the print version is legible */
-  body { background:#0A0A0A !important; color:#F0F0F0 !important; font-size:16px !important; cursor:auto !important; overflow:visible !important; }
-  .hero-title .line[style*="opacity: 0"] { opacity:1 !important; }
-  .hero-foot .bio { opacity:1 !important; width:auto !important; max-width:520px !important; font-size:15px !important; font-weight:400 !important; line-height:1.7 !important; color:#888 !important; white-space:pre-line; }
-  .hero-foot .scroll { opacity:1 !important; }
-  .works-head .meta { font-size:13px !important; width:auto !important; max-width:280px !important; line-height:1.6 !important; white-space:pre-line; }
-
-  /* Disable reveal initial states so content is visible without JS */
-  .reveal-y, .reveal-y-sm, .reveal-x { opacity:1 !important; transform:none !important; }
-  .hero-title .line span { clip-path:none !important; }
-
-  @media print {
-    @page { size: A4; margin: 12mm; }
-    html, body { background:#0A0A0A !important; color:#F0F0F0 !important; }
-    section.block, .hero { padding-top:48px !important; padding-bottom:48px !important; min-height:auto !important; }
-    .hero { break-after: page; }
-    section.block { break-before: page; break-inside: avoid-page; }
-    .strengths, .kpi-spotlight, .tl-row, .work-row, .skills-grid { break-inside: avoid; }
-    .marquee { display:none !important; }
-    .hero-meta, .hero-foot { position:static !important; margin:24px 0; left:auto !important; right:auto !important; top:auto !important; bottom:auto !important; }
-    .hero { display:block !important; padding:48px 56px !important; }
-    .hero-title { font-size:96px !important; line-height:.9 !important; margin:16px 0 32px !important; }
-    .hero-title .line span { clip-path:none !important; transform:none !important; opacity:1 !important; }
-    .hero-foot { display:flex !important; gap:32px; justify-content:space-between; align-items:flex-end; }
-    .display { font-size:64px !important; }
-    .work-row, .strength, .magnetic, .topbar a, a { cursor:auto !important; }
-    .work-row:hover::before { transform:scaleX(0) !important; }
-    .work-row:hover * { color:inherit !important; }
-    .magnetic { box-shadow:none !important; }
-    footer { padding:24px 56px !important; border-top:1px solid #222 !important; }
-    .ghost-grid { display:none !important; }
+  .skills-col {
+    background: var(--bg-alt);
+    padding: 40px 32px;
   }
-</style>
+  .skills-col h4 {
+    font-size: 11px; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.25em; text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .skills-col h4::before { content: ""; width: 24px; height: 1px; background: var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    font-size: 12px; letter-spacing: 0.06em;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-card);
+    border-radius: 999px;
+    text-transform: uppercase;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.solid { background: var(--accent); color: #000; border-color: var(--accent); }
+  @media (max-width: 700px) { .skills-block { grid-template-columns: 1fr; } }
 
+  /* Certs */
+  .certs {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .cert {
+    background: var(--bg-card);
+    padding: 22px 24px;
+  }
+  .cert .name { font-size: 14px; font-weight: 700; }
+  .cert .date { font-size: 11px; color: var(--text-secondary); margin-top: 6px; letter-spacing: 0.08em; }
+  @media (max-width: 800px) { .certs { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 500px) { .certs { grid-template-columns: 1fr; } }
+
+  /* ===================== 04 CONTACT ===================== */
+  .contact {
+    padding: 200px 0 120px;
+    position: relative;
+    border-top: 1px solid var(--border);
+  }
+  .contact .big {
+    font-size: clamp(80px, 16vw, 220px);
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+  }
+  .contact .big .lets { color: var(--text-primary); display:block; }
+  .contact .big .talk { color: var(--accent); display:block; }
+
+  .contact-grid {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: flex-end;
+  }
+  .contact-info { font-size: 14px; line-height: 1.9; color: var(--text-secondary); }
+  .contact-info .row { display: flex; gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+  .contact-info .row:first-child { border-top: 1px solid var(--border); }
+  .contact-info .row dt {
+    flex: 0 0 80px;
+    font-size: 10px; letter-spacing: 0.25em;
+    color: var(--text-secondary);
+    text-transform: uppercase; font-weight: 700;
+  }
+  .contact-info .row dd { color: var(--text-primary); font-weight: 500; font-size: 15px; }
+
+  .magnetic-wrap {
+    display: flex; justify-content: flex-end;
+  }
+  .magnetic {
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    padding: 26px 40px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: background 0.4s, color 0.4s;
+    will-change: transform;
+  }
+  .magnetic .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; transition: background 0.3s; }
+  .magnetic:hover { background: var(--accent); color: #000; }
+  .magnetic:hover .dot { background: #000; }
+  .magnetic .arrow { font-size: 18px; }
+
+  @media (max-width: 768px) {
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .magnetic-wrap { justify-content: flex-start; }
+    .magnetic { padding: 20px 28px; font-size: 14px; }
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 56px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 24px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  footer .mark span { color: var(--accent); }
+  @media (max-width: 768px) { footer { padding: 28px 24px; flex-direction: column; align-items: flex-start; } }
+
+  /* helpers for scroll reveals */
+  .reveal-up { opacity: 0; transform: translateY(40px); }
+  .reveal-x { opacity: 0; transform: translateX(-20px); }
+  .reveal-soft { opacity: 0; transform: translateY(20px); }
+
+  /* Sticky side indicator */
+  .side-index {
+    position: fixed;
+    left: 24px; top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 700;
+    z-index: 50;
+    pointer-events: none;
+    mix-blend-mode: difference;
+    color: #888;
+  }
+  .side-index .accent { color: var(--accent); }
+  @media (max-width: 1100px) { .side-index { display: none; } }
+</style>
 </head>
-<body style="font-family: Pretendard; background-color: rgb(4, 0, 0); font-size: 14px">
+<body>
 
-<div class="scroll-progress" id="progress"></div>
-<div class="cursor-ring" id="ring"></div>
-<div class="cursor-dot" id="dot"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot" id="cursorDot"></div>
 
-<header class="topbar">
-  <div class="brand">HJY · PORTFOLIO ’26</div>
-  <nav>
-    <a href="#about" data-hover>About</a>
-    <a href="#works" data-hover>Works</a>
-    <a href="#exp" data-hover>Experience</a>
-    <a href="#contact" data-hover>Contact</a>
-  </nav>
-</header>
+<nav class="top-nav">
+  <div class="mark">HAN <span>JIN-Y</span> ©26</div>
+  <div class="nav-links">
+    <a href="#about">01 / About</a>
+    <a href="#works">02 / Works</a>
+    <a href="#experience">03 / Experience</a>
+    <a href="#contact">04 / Contact</a>
+  </div>
+</nav>
 
-<!-- =================== HERO =================== -->
-<section class="hero" data-screen-label="01 Hero">
-  <div class="ghost-grid"></div>
+<aside class="side-index" id="sideIndex"><span class="accent">●</span>&nbsp;&nbsp;PORTFOLIO · 2026</aside>
 
-  <div class="hero-meta">
-    <div class="role">HR Operations · Problem Solver</div>
-    <div class="year">2026 — Available for HR Roles</div>
+<!-- =========================================================== HERO -->
+<header class="hero" id="top">
+  <div class="hero-meta-top">
+    <div class="meta-title">HR PROBLEM SOLVER — 한진이 / JIN-Y HAN</div>
+    <div class="meta-year">
+      <span>©</span>
+      <span class="big">20 / 26</span>
+      <span>PORTFOLIO</span>
+    </div>
   </div>
 
-  <h1 class="hero-title" aria-label="Han Jin-yi">
-    <span class="line"><span>HAN<span class="dot">.</span></span></span>
-    <span class="line"><span>JINY </span></span>
-    <span class="line" style="opacity: 0"><span>_</span></span>
+  <h1 class="hero-name">
+    <span class="line"><span class="inner">HAN.</span></span>
+    <span class="line"><span class="inner">JINY.</span></span>
   </h1>
 
-  <div class="hero-foot" style="justify-content: space-between">
-    <p class="bio" style="width: 5px; font-weight: 700; font-size: 1px">HR 운영의 문제를 체계적으로 해결하는, 문제해결형 파트너.
-현대엔지니어링·쿠팡풀필먼트서비스에서 채용·근태·휴복직 전사 운영을 담당하며, 
-제도 설계와 프로세스 디지털화로 활용률 3× / 반복 문의 −50% 를 만들었습니다.</p>
-    <a href="#contact" class="scroll" data-hover>
-      Scroll <span class="arrow">↓</span>
-    </a>
+  <div class="hero-tagline reveal-soft" id="heroTagline">
+    <span>HR OPERATIONS</span>
+    <span>POLICY DESIGN</span>
+    <span>DATA-DRIVEN</span>
+    <span>PROBLEM SOLVING</span>
   </div>
-</section>
 
-<!-- Marquee -->
+  <div class="hero-meta-bottom">
+    <p class="hero-bio">HR 운영의 비효율을 데이터와 제도로 풀어내는
+문제해결형 HR 파트너
+현대엔지니어링 · 쿠팡풀필먼트서비스에서
+채용 · 온보딩 · 휴복직 · 근태 운영을 설계했습니다.</p>
+    <div class="scroll-cue">
+      <span>SCROLL</span>
+      <span class="arrow"></span>
+    </div>
+  </div>
+</header>
+
+<!-- =========================================================== MARQUEE -->
 <div class="marquee" aria-hidden="true">
-  <div class="marquee-track" id="marqueeTrack">
-    <span>HR OPERATIONS<span class="star">✦</span></span>
-    <span>POLICY DESIGN<span class="star">✦</span></span>
-    <span>ONBOARDING<span class="star">✦</span></span>
-    <span>DATA-DRIVEN<span class="star">✦</span></span>
-    <span>WORKFORCE ANALYTICS<span class="star">✦</span></span>
-    <span>PROCESS REDESIGN<span class="star">✦</span></span>
-    <span>EMPLOYEE EXPERIENCE<span class="star">✦</span></span>
-    <span>PROBLEM SOLVING<span class="star">✦</span></span>
+  <div class="marquee-track">
+    <span>HR OPERATIONS</span>
+    <span>ONBOARDING DESIGN</span>
+    <span>POLICY ARCHITECT</span>
+    <span>DATA ANALYSIS</span>
+    <span>RECRUITMENT</span>
+    <span>ATTENDANCE SYSTEM</span>
+    <span>PROBLEM SOLVING</span>
+    <span>HRM AUTOMATION</span>
+    <!-- duplicate for seamless loop -->
+    <span>HR OPERATIONS</span>
+    <span>ONBOARDING DESIGN</span>
+    <span>POLICY ARCHITECT</span>
+    <span>DATA ANALYSIS</span>
+    <span>RECRUITMENT</span>
+    <span>ATTENDANCE SYSTEM</span>
+    <span>PROBLEM SOLVING</span>
+    <span>HRM AUTOMATION</span>
   </div>
 </div>
 
-<!-- =================== 01 ABOUT =================== -->
-<section class="block" id="about" data-screen-label="02 About">
+<!-- =========================================================== 01 ABOUT -->
+<section class="block" id="about">
   <div class="wrap">
-    <div class="label">01 / About</div>
-    <h2 class="display reveal-y">A<span class="gap"></span>BO<span class="gap"></span>UT<span class="accent">.</span></h2>
+    <div class="section-head">
+      <div>
+        <div class="section-label">01 — About</div>
+        <h2 class="section-display reveal-up" data-reveal>ABO<span class="gap"></span>UT.</h2>
+      </div>
+      <div class="num">SECTION / 01 · 04</div>
+    </div>
 
     <div class="about-grid">
-      <blockquote class="about-quote reveal-y-sm">
-        “문제를 <em>구조</em>로 환원하고,<br/>
-        제도와 데이터로 <em>다시 짓는다.</em>”
-      </blockquote>
+      <aside class="about-left">
+        <div class="label">— Profile</div>
+        <dl>
+          <div class="info-row"><dt>Name</dt><dd>한진이 · Jin-y Han</dd></div>
+          <div class="info-row"><dt>Born</dt><dd>1997. 11. 27 (만 28세)</dd></div>
+          <div class="info-row"><dt>Role</dt><dd>HR Operations & Policy</dd></div>
+          <div class="info-row"><dt>Edu</dt><dd>명지대 행정학과 · 교직이수</dd></div>
+          <div class="info-row"><dt>Mail</dt><dd><a href="mailto:jiny9710@naver.com">jiny9710@naver.com</a></dd></div>
+          <div class="info-row"><dt>Tel</dt><dd>010 · 8632 · 9721</dd></div>
+        </dl>
+      </aside>
 
-      <div class="about-body reveal-y-sm">
-        <p>안녕하세요. 한진이 입니다. 현대엔지니어링에서 채용·근태·휴복직 등 전사 HRM 운영을 담당하며 체계적인 관리 역량을 구축했습니다. 자기개발 휴직 제도 신설 프로젝트에서 노사협의회 안건을 실제 제도로 구현하여 휴직 가이드 제작 및 프로세스 디지털화로 신청 허들을 제거하여 <span style="color:#88888">활용률 3배 증가</span> 및 반복 문의 50% 감소 성과를 달성했습니다. </p>
+      <div class="about-right">
+        <blockquote class="quote reveal-up" data-reveal>
+          "HR 운영의 문제를 <em>체계적으로 해결하는</em>,<br/>
+          문제해결형 파트너 한진이 입니다."
+        </blockquote>
 
-        <p>쿠팡풀필먼트 인턴십에서는 신규 입사자 이탈률 문제 분석 및 개선 커리큘럼 설계를 통해 <span style="color:">온보딩 프로세스 개선안을 시범 운영으로 채택</span>시켰습니다. 이러한 HR 운영 및 제도 개선 경험을 바탕으로 HRM 체계를 더욱 효율적이고 유연하게 발전시키겠습니다.</p>
-      </div>
-    </div>
+        <p class="about-body reveal-up" data-reveal>
+          현대엔지니어링에서 <b>채용 · 근태 · 휴복직 등 전사 HRM 운영</b>을 담당하며 체계적인 관리 역량을 구축했습니다.
+          자기개발 휴직 제도 신설 프로젝트에서 노사협의회 안건을 실제 제도로 구현하여, 휴직 가이드 제작 및 프로세스 디지털화로
+          신청 허들을 제거 — <b>활용률 3배 증가 / 반복 문의 50% 감소</b> 성과를 달성했습니다.
+          쿠팡풀필먼트서비스 인턴십에서는 신규 입사자 이탈률 문제를 분석하고 개선 커리큘럼을 설계하여
+          온보딩 프로세스 개선안을 시범 운영으로 채택시켰습니다.
+        </p>
 
-    <div class="strengths">
-      <div class="strength">
-        <div class="num">01 / STRENGTH</div>
-        <div>
-          <h3>HR Operations<br/>at Scale</h3>
-          <p>전사 HRM 운영을 데이터 기반으로 표준화 및 자동화 체계를 설계합니다.</p>
-        </div>
-      </div>
-      <div class="strength">
-        <div class="num">02 / STRENGTH</div>
-        <div>
-          <h3>Policy &amp;<br/>System Design</h3>
-          <p>실 제도로 구현 및 가이드·FAQ·디지털 신청 플로우까지 한 사이클로 만듭니다.</p>
-        </div>
-      </div>
-      <div class="strength">
-        <div class="num">03 / STRENGTH</div>
-        <div>
-          <h3>Data-Driven<br/>Decisions</h3>
-          <p>근태 예외 데이터·이탈률 로그를 분석해 의사결정을 정량 근거로 뒷받침합니다.</p>
-        </div>
-      </div>
-      <div class="strength">
-        <div class="num">04 / STRENGTH</div>
-        <div>
-          <h3>Cross-Team<br/>Communication</h3>
-          <p>현업의 제도 의도가 운영 현장에서 정확히 작동하도록 조율합니다.</p>
+        <div class="strengths" id="strengths">
+          <div class="strength reveal-up" data-reveal>
+            <div class="num">STR. 01</div>
+            <h3>제도를 실제로 굴린다</h3>
+            <p>노사협의회 안건을 운영 가능한 제도로 옮긴 경험. 가이드·FAQ·디지털 신청 흐름까지 한 번에 설계합니다.</p>
+          </div>
+          <div class="strength reveal-up" data-reveal>
+            <div class="num">STR. 02</div>
+            <h3>데이터로 결정한다</h3>
+            <p>근태 예외 데이터를 분석하고, 누락 방지·자동화 기회를 도출. 감으로 운영하지 않습니다.</p>
+          </div>
+          <div class="strength reveal-up" data-reveal>
+            <div class="num">STR. 03</div>
+            <h3>스크리닝과 채용 기획</h3>
+            <p>전화 인터뷰 스크리닝 소스를 직접 개발 · 직군별 공고와 EVP 벤치마킹까지 수행.</p>
+          </div>
+          <div class="strength reveal-up" data-reveal>
+            <div class="num">STR. 04</div>
+            <h3>문서·커뮤니케이션</h3>
+            <p>전사 공지 · 모성보호 가이드 · FAQ 제작. 정확한 글이 가장 빠른 운영이라고 믿습니다.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- =================== 02 WORKS =================== -->
-<section class="block" id="works" data-screen-label="03 Works">
+<!-- =========================================================== 02 WORKS -->
+<section class="block" id="works">
   <div class="wrap">
-    <div class="works-head">
+    <div class="section-head">
       <div>
-        <div class="label">02 / Works</div>
-        <h2 class="display reveal-y">WO<span class="gap"></span>R<span class="gap"></span>KS<span class="accent">.</span></h2>
+        <div class="section-label">02 — Selected Works</div>
+        <h2 class="section-display reveal-up" data-reveal>WO<span class="gap"></span>RKS.</h2>
       </div>
-      <div class="meta reveal-y-sm" style="width: 300px; font-size: 1px">Selected projects, 2023 — 2025
-HR 제도 설계, 운영 디지털화, 온보딩 재설계, 데이터 분석</div>
+      <div class="num">SECTION / 02 · 04</div>
     </div>
 
-    <div class="work-list">
-      <a class="work-row reveal-x" data-hover href="#" onclick="return false">
-        <div class="idx">01 / 2024</div>
-        <div class="title">자기개발 휴직 제도 신설<span class="sub">Hyundai Engineering · Policy Build</span></div>
-        <div class="tags"><span>Policy Design</span><span>FAQ</span><span>Digital Form</span></div>
-        <div class="arrow">↗</div>
+    <div class="works">
+      <a class="work" href="#exp" data-hoverable>
+        <div class="w-num">W / 01</div>
+        <div>
+          <div class="w-title">자기개발 휴직 제도 신설 & 운영</div>
+          <div class="w-meta"><span>현대엔지니어링</span><span>2024</span><span>POLICY / OPS</span></div>
+          <div class="w-tags"><span>제도 설계</span><span>가이드 / FAQ</span><span>프로세스 디지털화</span><span>전사 공지</span></div>
+        </div>
+        <div class="w-arrow">↗</div>
       </a>
-      <a class="work-row reveal-x" data-hover href="#" onclick="return false">
-        <div class="idx">02 / 2024</div>
-        <div class="title">근무시간 관리체계 재구축<span class="sub">Selective Working Hours · Operations</span></div>
-        <div class="tags"><span>Workforce</span><span>Exception Data</span><span>Guideline</span></div>
-        <div class="arrow">↗</div>
+
+      <a class="work" href="#exp" data-hoverable>
+        <div class="w-num">W / 02</div>
+        <div>
+          <div class="w-title">온보딩 프로세스 재설계</div>
+          <div class="w-meta"><span>쿠팡풀필먼트서비스</span><span>2023</span><span>RECRUIT / ONBOARDING</span></div>
+          <div class="w-tags"><span>6개월 단계 커리큘럼</span><span>현업 멘토링</span><span>벤치마킹</span><span>시범 운영 채택</span></div>
+        </div>
+        <div class="w-arrow">↗</div>
       </a>
-      <a class="work-row reveal-x" data-hover href="#" onclick="return false">
-        <div class="idx">03 / 2023</div>
-        <div class="title">신규 입사자 온보딩 개선<span class="sub">Coupang Fulfillment · 6-mo Curriculum</span></div>
-        <div class="tags"><span>Onboarding</span><span>Benchmarking</span><span>Mentoring</span></div>
-        <div class="arrow">↗</div>
+
+      <a class="work" href="#exp" data-hoverable>
+        <div class="w-num">W / 03</div>
+        <div>
+          <div class="w-title">근무시간 관리체계 재구축</div>
+          <div class="w-meta"><span>현대엔지니어링</span><span>2024 — 2025</span><span>ATTENDANCE / SYSTEM</span></div>
+          <div class="w-tags"><span>선택적 근로시간제</span><span>해석 기준 수립</span><span>예외 데이터 분석</span></div>
+        </div>
+        <div class="w-arrow">↗</div>
       </a>
-      <a class="work-row reveal-x" data-hover href="#" onclick="return false">
-        <div class="idx">04 / 2025</div>
-        <div class="title">AI · 데이터 분석 프로젝트<span class="sub">SQL · Python · People Analytics</span></div>
-        <div class="tags"><span>SQL</span><span>Python</span><span>Analytics</span></div>
-        <div class="arrow">↗</div>
+
+      <a class="work" href="#exp" data-hoverable>
+        <div class="w-num">W / 04</div>
+        <div>
+          <div class="w-title">입사 행정 데이터 표준화 · 자동화 검토</div>
+          <div class="w-meta"><span>현대엔지니어링</span><span>2023 — 2024</span><span>HRM / DATA</span></div>
+          <div class="w-tags"><span>전자 근로계약</span><span>그룹웨어 연동</span><span>누락 방지</span></div>
+        </div>
+        <div class="w-arrow">↗</div>
+      </a>
+
+      <a class="work" href="#exp" data-hoverable>
+        <div class="w-num">W / 05</div>
+        <div>
+          <div class="w-title">AI / 데이터 분석 사이드 프로젝트</div>
+          <div class="w-meta"><span>Self</span><span>2024 — 2025</span><span>SQL / PYTHON</span></div>
+          <div class="w-tags"><span>HR 데이터</span><span>SQL</span><span>Python</span><span>AI 프롬프트 2급</span></div>
+        </div>
+        <div class="w-arrow">↗</div>
       </a>
     </div>
 
-    <div class="kpi-spotlight">
+    <!-- KPI spotlight -->
+    <div class="kpi-block" id="kpiBlock">
       <div class="kpi">
-        <div class="num"><span class="count" data-to="3">0</span><span class="unit">×</span></div>
-        <h4>제도 활용률 증가</h4>
-        <p>자기개발 휴직 제도 신청 허들 제거 후 활용률이 신설 시점 대비 3배로 확대</p>
+        <div class="num"><span class="kpi-count" data-target="3" data-suffix="">0</span><span class="unit">× UP</span></div>
+        <div class="desc"><b>휴직 제도 활용률</b>자기개발 휴직 신설 후 신청률 3배 증가</div>
       </div>
       <div class="kpi">
-        <div class="num"><span class="count" data-to="50">0</span><span class="unit">%↓</span></div>
-        <h4>반복 문의 감소</h4>
-        <p>가이드·FAQ·디지털 신청 플로우 도입으로 동일 유형 반복 문의 절반으로 축소</p>
+        <div class="num"><span class="kpi-count" data-target="50">0</span><span class="unit" style="font-size: 23.68px">% DOWN</span></div>
+        <div class="desc"><b>반복 문의량</b>가이드 · FAQ · 디지털 신청 흐름 정비</div>
       </div>
       <div class="kpi">
-        <div class="num"><span class="count" data-to="6">0</span><span class="unit">mo</span></div>
-        <h4>온보딩 커리큘럼</h4>
-        <p>벤치마킹 기반 6개월 단계별 온보딩 + 현업 멘토링 구조, 시범 운영안 채택</p>
+        <div class="num"><span class="kpi-count" data-target="6">0</span><span class="unit" style="font-size: 23px">개월</span></div>
+        <div class="desc"><b>온보딩 커리큘럼</b>단계별 6개월 적응 프로그램 재설계</div>
+      </div>
+      <div class="kpi">
+        <div class="num"><span class="kpi-count" data-target="100">0</span><span class="unit" style="font-size: 23px">% 채택</span></div>
+        <div class="desc"><b>시범 운영 채택률</b>온보딩 개선안 시범 운영 채택</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- =================== 03 EXPERIENCE =================== -->
-<section class="block" id="exp" data-screen-label="04 Experience">
+<!-- =========================================================== 03 EXPERIENCE -->
+<section class="block" id="experience">
   <div class="wrap">
-    <div class="label">03 / Experience</div>
-    <h2 class="display reveal-y">EXPE<span class="gap"></span>RI<span class="gap"></span>ENCE<span class="accent">.</span></h2>
+    <div class="section-head">
+      <div>
+        <div class="section-label">03 — Career Timeline</div>
+        <h2 class="section-display reveal-up" data-reveal>EXPE<span class="gap"></span>RI<span class="gap"></span>ENCE.</h2>
+      </div>
+      <div class="num">SECTION / 03 · 04</div>
+    </div>
 
-    <div class="timeline">
-      <div class="tl-row reveal-y-sm">
-        <div class="tl-date">2023.11 — 2025.11</div>
-        <div class="tl-role">
-          <span class="org">Hyundai Engineering</span>
-          <h4>HR파트너팀 · HR지원팀<br/>매니저</h4>
+    <div class="timeline" id="exp">
+
+      <div class="tl-row" data-reveal-row>
+        <div class="tl-date">
+          2023. 11 — 2025. 11
+          <br/><span class="tag">2년 · 계약직</span>
         </div>
-        <ul class="tl-bullets">
-          <li><strong>휴·복직 제도 신설/운영</strong> · 전사 공지·FAQ·디지털 신청 플로우 (활용률 3× / 문의 −50%)</li>
-          <li><strong>전사 근태·선택적 근로시간제</strong> · 해석 기준 수립, 예외 데이터 분석, 문의 대응</li>
-          <li><strong>입사 행정 데이터 관리</strong> · 전자 근로계약 도입 & 그룹웨어 연동안 검토, 누락 방지</li>
-          <li><strong>채용 운영 · 온보딩 교육</strong> · 신규 입사자 초기 적응 지원</li>
-          <li><strong>모성보호 제도</strong> · 안내 배포 및 전사 공지, 활용률 극대화</li>
-        </ul>
+        <div class="tl-body">
+          <h3>HR파트너팀 / HR지원팀 · 매니저</h3>
+          <div class="org">현대엔지니어링(주)</div>
+          <ul class="tl-bullets">
+            <li><b>채용운영 전반 및 온보딩 교육 진행</b> — 신규 입사자의 초기 적응을 책임지고, 데이터 기반 운영 체계를 마련했습니다.</li>
+            <li><b>전자 근로계약 도입 / 그룹웨어 연동 검토</b> — 입사 행정 데이터 관리로 누락 방지 및 <span class="hl">자동화 기회</span>를 도출.</li>
+            <li><b>자기개발 휴직 제도 신설 & 운영</b> — 노사협의회 안건을 실제 제도로 구현, 가이드 / FAQ 배포로 <span class="hl">활용률 3배 ↑ · 반복 문의 50% ↓</span>.</li>
+            <li><b>모성보호제도 운영 & 전사 공지</b> — 가이드 배포 및 안내 채널 운영으로 제도 활용률을 극대화.</li>
+            <li><b>선택적 근로시간제 운영</b> — 근무시간 해석 기준 수립, 근태 예외 데이터 분석 및 문의 대응.</li>
+          </ul>
+        </div>
       </div>
 
-      <div class="tl-row reveal-y-sm">
-        <div class="tl-date">2023.07 — 2023.09</div>
-        <div class="tl-role">
-          <span class="org">Coupang Fulfillment Services</span>
-          <h4>Talent Acquisition<br/>인턴</h4>
+      <div class="tl-row" data-reveal-row>
+        <div class="tl-date">
+          2023. 07 — 2023. 09
+          <br/><span class="tag">3개월 · 인턴</span>
         </div>
-        <ul class="tl-bullets">
-          <li><strong>온보딩 프로세스 재설계</strong> · 벤치마킹 기반 6개월 단계별 커리큘럼 + 현업 멘토링 (시범 운영 채택)</li>
-          <li><strong>대규모 계약직·일용직 채용 운영</strong> · 전화 인터뷰 스크리닝 소스 개발</li>
-          <li><strong>채용공고 리뉴얼</strong> · 직군별 특성·공통 요구사항 분석으로 포지션별 전략 수립 기여</li>
-          <li><strong>EVP 분석 · 동종업계 벤치마킹</strong> · 배민·컬리 등 분석으로 리텐션 강화 방향 도출</li>
-        </ul>
+        <div class="tl-body">
+          <h3>Talent Acquisition · 인턴</h3>
+          <div class="org">쿠팡풀필먼트서비스(주)</div>
+          <ul class="tl-bullets">
+            <li><b>대규모 계약직 · 일용직 채용 운영</b> — 채용 기획부터 실행까지 전 과정을 직접 수행.</li>
+            <li><b>전화 인터뷰 스크리닝 소스 개발</b> — 지원자 적합성 판단 효율성 향상.</li>
+            <li><b>채용공고 직군별 / 공통 요구사항 정비</b> — 포지션별 채용 전략 수립에 기여.</li>
+            <li><b>온보딩 프로세스 개선안 설계</b> — 벤치마킹 기반 <span class="hl">6개월 단계별 커리큘럼 + 현업 멘토링</span> 구조로 시범 운영 채택.</li>
+            <li><b>동종업계 EVP 벤치마킹</b> — 배민 · 컬리 등 분석을 통해 채용 경쟁력 / 리텐션 강화 방향 제시.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-row" data-reveal-row>
+        <div class="tl-date">
+          2016. 03 — 2023. 02
+          <br/><span class="tag">학력</span>
+        </div>
+        <div class="tl-body">
+          <h3>행정학과 · 교직이수</h3>
+          <div class="org">명지대학교</div>
+          <ul class="tl-bullets">
+            <li>학사 학위 취득 · 교직이수(일반사회)</li>
+            <li>중등학교 2급 정교사 (일반사회) — 2023. 02.</li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <div class="sub-h">— Education</div>
-    <div class="timeline">
-      <div class="tl-row reveal-y-sm">
-        <div class="tl-date">2016.03 — 2023.02</div>
-        <div class="tl-role">
-          <span class="org">Myongji University</span>
-          <h4>행정학과<br/>교직이수</h4>
+    <!-- Skills -->
+    <div class="skills-block">
+      <div class="skills-col">
+        <h4>Skills</h4>
+        <div class="chips">
+          <span class="chip solid">HR Operations & Analytics</span>
+          <span class="chip">Policy & System Improvement</span>
+          <span class="chip">Data-Driven Decision</span>
+          <span class="chip">Communication & Collab.</span>
+          <span class="chip">Problem Solving</span>
+          <span class="chip">Recruitment Ops</span>
+          <span class="chip">Onboarding Design</span>
         </div>
-        <ul class="tl-bullets">
-          <li>중등학교 2급 정교사 (일반사회) · 2025.08</li>
-          <li>AI 프롬프트 활용능력 2급 · 2023.02</li>
-          <li>한국실용글쓰기검정 3급 · 2022.03</li>
-          <li>한국사능력검정시험 1급 · 2020.07</li>
-        </ul>
       </div>
-      <div class="tl-row reveal-y-sm">
-        <div class="tl-date">Languages</div>
-        <div class="tl-role">
-          <span class="org">Languages</span>
-          <h4>English<br/>Proficiency</h4>
+      <div class="skills-col">
+        <h4>Tools</h4>
+        <div class="chips">
+          <span class="chip">MS Excel</span>
+          <span class="chip">PowerPoint</span>
+          <span class="chip">Word</span>
+          <span class="chip">Google Workspace</span>
+          <span class="chip">Google Sheets</span>
+          <span class="chip">Teams</span>
+          <span class="chip">Slack</span>
+          <span class="chip">SQL</span>
+          <span class="chip">Python</span>
+          <span class="chip">Figma</span>
         </div>
-        <ul class="tl-bullets">
-          <li>TOEIC Speaking · <strong>Intermediate Mid 2</strong> (2024.12)</li>
-          <li>G-TELP · <strong>Level 2 — 160</strong> (2024.06)</li>
-        </ul>
       </div>
     </div>
 
-    <div class="sub-h">— Skills & Tools</div>
-    <div class="skills-grid">
-      <div class="skill-col">
-        <h5>Core Skills</h5>
-        <div class="skill-list">
-          <div class="item"><span>HR Operations &amp; Analytics</span><span class="lvl"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
-          <div class="item"><span>Policy &amp; System Improvement</span><span class="lvl"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
-          <div class="item"><span>Data-Driven Decision</span><span class="lvl"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
-          <div class="item"><span>Communication &amp; Collaboration</span><span class="lvl"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
-          <div class="item"><span>Problem Solving</span><span class="lvl"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
-        </div>
-      </div>
-      <div class="skill-col">
-        <h5>Tools &amp; Stack</h5>
-        <div class="tools-flow">
-          <span>Microsoft Excel</span><span>Microsoft PowerPoint</span><span>Microsoft Word</span>
-          <span>Microsoft Teams</span><span>Google Workspace</span><span>Google Sheets</span>
-          <span>Slack</span><span>SQL</span><span>Python</span><span>Figma</span>
-        </div>
-      </div>
+    <!-- Certifications -->
+    <div class="certs">
+      <div class="cert"><div class="name">AI 프롬프트 활용능력 · 2급</div><div class="date">2025 · 08</div></div>
+      <div class="cert"><div class="name">Toeic Speaking · IM 2</div><div class="date">2024 · 12</div></div>
+      <div class="cert"><div class="name">G-TELP · Level 2</div><div class="date">2024 · 06</div></div>
+      <div class="cert"><div class="name"> 중등학교 2급 정교사 (일반사회)</div><div class="date">2023 · 02</div></div>
+      <div class="cert"><div class="name">한국실용글쓰기검정 · 3급</div><div class="date">2022 · 03</div></div>
+      <div class="cert"><div class="name">한국사능력검정시험 · 1급</div><div class="date">2020 · 07</div></div>
     </div>
   </div>
 </section>
 
-<!-- =================== 04 CONTACT =================== -->
-<section class="block contact" id="contact" data-screen-label="05 Contact">
+<!-- =========================================================== 04 CONTACT -->
+<section class="contact" id="contact">
   <div class="wrap">
-    <div class="label">04 / Contact</div>
-    <h2 class="display reveal-y">
-      <span class="lt">LET’S</span>
-      <span class="lt2 accent">TALK<span style="color:var(--text-primary)">.</span></span>
+    <div class="section-label" style="margin-bottom: 40px;">04 — Contact</div>
+    <h2 class="big">
+      <span class="lets">LET'S</span>
+      <span class="talk">TALK.</span>
     </h2>
 
     <div class="contact-grid">
-      <div class="contact-info reveal-y-sm">
-        <div class="row"><span class="k">Email</span><span class="v">jiny9710@naver.com</span></div>
-        <div class="row"><span class="k">Mobile</span><span class="v">010-8632-9721</span></div>
-        <div class="row"><span class="k">Based in</span><span class="v">Seoul, Korea</span></div>
-        <div class="row"><span class="k">Born</span><span class="v">1997.11.27</span></div>
-        <div class="row"><span class="k">Open to</span><span class="v">HRM · People Ops · HRBP</span></div>
+      <div class="contact-info">
+        <p style="margin-bottom: 24px; color: var(--text-secondary); line-height: 1.8; max-width: 460px;">
+          좋은 HR 운영은 좋은 대화에서 시작됩니다.<br/>
+          제도 · 운영 · 데이터 어떤 이야기든, 편하게 연결해 주세요.
+        </p>
+        <dl>
+          <div class="row"><dt>Email</dt><dd>jiny9710@naver.com</dd></div>
+          <div class="row"><dt>Phone</dt><dd>010 · 8632 · 9721</dd></div>
+          <div class="row"><dt>Based</dt><dd>Seoul, KR</dd></div>
+          <div class="row"><dt>Open</dt><dd>HRM / HRBP / Operations</dd></div>
+        </dl>
       </div>
-
       <div class="magnetic-wrap">
-        <a href="mailto:jiny9710@naver.com" class="magnetic" id="magnetic" data-hover>
-          <span>SEND EMAIL</span>
-          <span class="arrow">↗</span>
+        <a class="magnetic" id="magnetic" href="mailto:jiny9710@naver.com" data-hoverable>
+          <span class="dot"></span>
+          <span>SEND AN EMAIL</span>
+          <span class="arrow">→</span>
         </a>
       </div>
     </div>
@@ -527,27 +1115,198 @@ HR 제도 설계, 운영 디지털화, 온보딩 재설계, 데이터 분석</di
 </section>
 
 <footer>
-  <div>© 2026 HAN JINY✦HR PORTFOLIO</div>
-  <div>DESIGN &amp; BUILT <span class="dot">✦</span> 2026 EDITION</div>
+  <div class="mark">© 2026 — HAN <span>JIN-Y</span> / PORTFOLIO</div>
+  <div>
+</div>
+  <div>
+</div>
 </footer>
 
-
+<!-- =========================================================== SCRIPTS -->
 <script>
-  // Print-mode: skip GSAP animations entirely. Wait for fonts then print.
-  document.documentElement.classList.add('print-ready');
-  // Duplicate marquee track for visual symmetry only
-  try {
-    const t = document.getElementById('marqueeTrack');
-    if (t) t.innerHTML = t.innerHTML + t.innerHTML;
-  } catch(e){}
-  function go(){
-    setTimeout(() => { try { window.print(); } catch(e){} }, 500);
+  /* ---------- Scroll progress bar ---------- */
+  const progressEl = document.getElementById('scrollProgress');
+  function updateProgress() {
+    const h = document.documentElement;
+    const scrollTop = h.scrollTop || document.body.scrollTop;
+    const height = h.scrollHeight - h.clientHeight;
+    const pct = height > 0 ? (scrollTop / height) * 100 : 0;
+    progressEl.style.width = pct + '%';
   }
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(go, go);
-  } else {
-    window.addEventListener('load', go);
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  /* ---------- Custom cursor (lerp) ---------- */
+  const ring = document.getElementById('cursorRing');
+  const dot = document.getElementById('cursorDot');
+  const target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  const ringPos = { x: target.x, y: target.y };
+  const dotPos = { x: target.x, y: target.y };
+
+  window.addEventListener('mousemove', (e) => {
+    target.x = e.clientX;
+    target.y = e.clientY;
+  });
+  function animateCursor() {
+    ringPos.x += (target.x - ringPos.x) * 0.08;
+    ringPos.y += (target.y - ringPos.y) * 0.08;
+    dotPos.x += (target.x - dotPos.x) * 0.5;
+    dotPos.y += (target.y - dotPos.y) * 0.5;
+    ring.style.transform = `translate(${ringPos.x}px, ${ringPos.y}px) translate(-50%, -50%)`;
+    dot.style.transform = `translate(${dotPos.x}px, ${dotPos.y}px) translate(-50%, -50%)`;
+    requestAnimationFrame(animateCursor);
   }
+  animateCursor();
+
+  // hover state
+  document.querySelectorAll('a, button, [data-hoverable]').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.classList.add('is-hover');
+      dot.classList.add('is-hover');
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.classList.remove('is-hover');
+      dot.classList.remove('is-hover');
+    });
+  });
+
+  /* ---------- Magnetic button ---------- */
+  const magnetic = document.getElementById('magnetic');
+  if (magnetic) {
+    magnetic.addEventListener('mousemove', (e) => {
+      const r = magnetic.getBoundingClientRect();
+      const x = e.clientX - (r.left + r.width / 2);
+      const y = e.clientY - (r.top + r.height / 2);
+      const max = 12;
+      const nx = Math.max(-max, Math.min(max, x * 0.4));
+      const ny = Math.max(-max, Math.min(max, y * 0.4));
+      magnetic.style.transform = `translate(${nx}px, ${ny}px)`;
+    });
+    magnetic.addEventListener('mouseleave', () => {
+      magnetic.style.transition = 'transform 0.5s cubic-bezier(.7,0,.2,1)';
+      magnetic.style.transform = 'translate(0,0)';
+      setTimeout(() => { magnetic.style.transition = ''; }, 500);
+    });
+  }
+
+  /* ---------- GSAP setup ---------- */
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero load — clip-path stagger reveal
+  gsap.set('.hero-name .inner', { clipPath: 'inset(0 0 100% 0)' });
+  gsap.to('.hero-name .inner', {
+    clipPath: 'inset(0 0 0% 0)',
+    duration: 1.1,
+    ease: 'power4.out',
+    stagger: 0.18,
+    delay: 0.15
+  });
+
+  gsap.from('.hero-meta-top .meta-title', {
+    y: 20, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.5
+  });
+  gsap.from('.hero-meta-top .meta-year', {
+    y: 20, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.6
+  });
+  gsap.from('.hero-meta-bottom .hero-bio', {
+    y: 20, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.85
+  });
+  gsap.from('.hero-meta-bottom .scroll-cue', {
+    y: 20, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 1.0
+  });
+  gsap.from('#heroTagline', {
+    y: 14, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 1.1
+  });
+  gsap.from('.top-nav', { y: -20, opacity: 0, duration: 0.8, ease: 'power3.out', delay: 0.3 });
+
+  // Section display headings
+  gsap.utils.toArray('[data-reveal]').forEach(el => {
+    gsap.fromTo(el,
+      { y: 60, opacity: 0 },
+      {
+        y: 0, opacity: 1, duration: 1.0, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%' }
+      });
+  });
+
+  // Body paragraphs / soft reveals
+  gsap.utils.toArray('.about-body, .quote, .contact-info, .magnetic-wrap, .skills-block, .certs').forEach(el => {
+    gsap.fromTo(el,
+      { y: 30, opacity: 0 },
+      {
+        y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%' }
+      });
+  });
+
+  // Strength cards stagger
+  gsap.utils.toArray('.strength').forEach((card, i) => {
+    gsap.fromTo(card,
+      { y: 30, opacity: 0 },
+      {
+        y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+        delay: i * 0.1,
+        scrollTrigger: { trigger: '#strengths', start: 'top 85%' }
+      });
+  });
+
+  // Works rows stagger from left
+  gsap.utils.toArray('.work').forEach((row, i) => {
+    gsap.fromTo(row,
+      { x: -20, opacity: 0 },
+      {
+        x: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+        delay: i * 0.07,
+        scrollTrigger: { trigger: '.works', start: 'top 80%' }
+      });
+  });
+
+  // Experience timeline rows
+  gsap.utils.toArray('[data-reveal-row]').forEach((row, i) => {
+    gsap.fromTo(row,
+      { y: 20, opacity: 0 },
+      {
+        y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
+        delay: i * 0.1,
+        scrollTrigger: { trigger: row, start: 'top 88%' }
+      });
+  });
+
+  // KPI count-up
+  gsap.utils.toArray('.kpi-count').forEach(el => {
+    const target = parseFloat(el.getAttribute('data-target'));
+    const obj = { v: 0 };
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        gsap.to(obj, {
+          v: target,
+          duration: 2,
+          ease: 'power2.out',
+          onUpdate: () => {
+            el.textContent = Math.round(obj.v);
+          }
+        });
+      }
+    });
+  });
+
+  // Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        const t = document.querySelector(id);
+        if (t) {
+          e.preventDefault();
+          window.scrollTo({ top: t.offsetTop - 20, behavior: 'smooth' });
+        }
+      }
+    });
+  });
 </script>
+
 </body>
 </html>
