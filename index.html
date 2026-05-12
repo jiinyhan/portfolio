@@ -200,6 +200,48 @@
     *{cursor:auto !important}
   }
 </style>
+
+<style id="__print-overrides">
+  /* Force backgrounds/colors in print */
+  *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* Hide interactive chrome */
+  .scroll-progress, .cursor-dot, .cursor-ring, .topbar { display: none !important; }
+
+  /* Repair direct-edit breakages so the print version is legible */
+  body { background:#0A0A0A !important; color:#F0F0F0 !important; font-size:16px !important; cursor:auto !important; overflow:visible !important; }
+  .hero-title .line[style*="opacity: 0"] { opacity:1 !important; }
+  .hero-foot .bio { opacity:1 !important; width:auto !important; max-width:520px !important; font-size:15px !important; font-weight:400 !important; line-height:1.7 !important; color:#888 !important; white-space:pre-line; }
+  .hero-foot .scroll { opacity:1 !important; }
+  .works-head .meta { font-size:13px !important; width:auto !important; max-width:280px !important; line-height:1.6 !important; white-space:pre-line; }
+
+  /* Disable reveal initial states so content is visible without JS */
+  .reveal-y, .reveal-y-sm, .reveal-x { opacity:1 !important; transform:none !important; }
+  .hero-title .line span { clip-path:none !important; }
+
+  @media print {
+    @page { size: A4; margin: 12mm; }
+    html, body { background:#0A0A0A !important; color:#F0F0F0 !important; }
+    section.block, .hero { padding-top:48px !important; padding-bottom:48px !important; min-height:auto !important; }
+    .hero { break-after: page; }
+    section.block { break-before: page; break-inside: avoid-page; }
+    .strengths, .kpi-spotlight, .tl-row, .work-row, .skills-grid { break-inside: avoid; }
+    .marquee { display:none !important; }
+    .hero-meta, .hero-foot { position:static !important; margin:24px 0; left:auto !important; right:auto !important; top:auto !important; bottom:auto !important; }
+    .hero { display:block !important; padding:48px 56px !important; }
+    .hero-title { font-size:96px !important; line-height:.9 !important; margin:16px 0 32px !important; }
+    .hero-title .line span { clip-path:none !important; transform:none !important; opacity:1 !important; }
+    .hero-foot { display:flex !important; gap:32px; justify-content:space-between; align-items:flex-end; }
+    .display { font-size:64px !important; }
+    .work-row, .strength, .magnetic, .topbar a, a { cursor:auto !important; }
+    .work-row:hover::before { transform:scaleX(0) !important; }
+    .work-row:hover * { color:inherit !important; }
+    .magnetic { box-shadow:none !important; }
+    footer { padding:24px 56px !important; border-top:1px solid #222 !important; }
+    .ghost-grid { display:none !important; }
+  }
+</style>
+
 </head>
 <body style="font-family: Pretendard; background-color: rgb(4, 0, 0); font-size: 14px">
 
@@ -489,103 +531,23 @@ HR 제도 설계, 운영 디지털화, 온보딩 재설계, 데이터 분석</di
   <div>DESIGN &amp; BUILT <span class="dot">✦</span> 2026 EDITION</div>
 </footer>
 
-<!-- GSAP -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
 <script>
-gsap.registerPlugin(ScrollTrigger);
-
-/* ---------- Custom Cursor ---------- */
-const dot = document.getElementById('dot');
-const ring = document.getElementById('ring');
-const mouse = {x:innerWidth/2, y:innerHeight/2};
-const ringPos = {x:mouse.x, y:mouse.y};
-addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; dot.style.transform=`translate(${mouse.x}px,${mouse.y}px) translate(-50%,-50%)`; });
-function loop(){
-  ringPos.x += (mouse.x - ringPos.x) * 0.08;
-  ringPos.y += (mouse.y - ringPos.y) * 0.08;
-  ring.style.transform = `translate(${ringPos.x}px,${ringPos.y}px) translate(-50%,-50%)`;
-  requestAnimationFrame(loop);
-}
-loop();
-document.querySelectorAll('[data-hover], a, .work-row, .strength, .magnetic, button').forEach(el=>{
-  el.addEventListener('mouseenter', ()=>{ ring.classList.add('hovered'); dot.classList.add('hovered'); });
-  el.addEventListener('mouseleave', ()=>{ ring.classList.remove('hovered'); dot.classList.remove('hovered'); });
-});
-
-/* ---------- Scroll progress ---------- */
-const prog = document.getElementById('progress');
-addEventListener('scroll', ()=>{
-  const h = document.documentElement;
-  const p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
-  prog.style.width = (p*100) + '%';
-}, {passive:true});
-
-/* ---------- Marquee duplicate for seamless loop ---------- */
-const track = document.getElementById('marqueeTrack');
-track.innerHTML = track.innerHTML + track.innerHTML;
-
-/* ---------- Hero entrance ---------- */
-const tl = gsap.timeline({defaults:{ease:'power4.out'}});
-tl.fromTo('.hero-title .line span',
-  {clipPath:'inset(0 0 100% 0)', y:'10%'},
-  {clipPath:'inset(0 0 0% 0)', y:'0%', duration:1.1, stagger:0.18}
-);
-tl.fromTo('.hero-meta .role', {y:20, opacity:0}, {y:0, opacity:1, duration:0.8}, 0.5);
-tl.fromTo('.hero-meta .year', {y:20, opacity:0}, {y:0, opacity:1, duration:0.8}, 0.6);
-tl.to('.hero-foot .bio', {opacity:1, duration:1}, 0.9);
-tl.to('.hero-foot .scroll', {opacity:1, duration:0.8}, 1.0);
-
-/* ---------- Scroll reveals ---------- */
-gsap.utils.toArray('.display.reveal-y, .reveal-y').forEach(el=>{
-  gsap.to(el,{ y:0, opacity:1, duration:1.0, ease:'power3.out',
-    scrollTrigger:{trigger:el, start:'top 85%'}});
-});
-gsap.utils.toArray('.reveal-y-sm').forEach(el=>{
-  gsap.to(el,{ y:0, opacity:1, duration:0.8, ease:'power3.out',
-    scrollTrigger:{trigger:el, start:'top 88%'}});
-});
-gsap.utils.toArray('.work-row').forEach((el,i)=>{
-  gsap.to(el,{ x:0, opacity:1, duration:0.7, ease:'power3.out', delay:i*0.07,
-    scrollTrigger:{trigger:el, start:'top 88%'}});
-});
-gsap.from('.strength', {
-  y:30, opacity:0, duration:0.7, stagger:0.1, ease:'power3.out',
-  scrollTrigger:{trigger:'.strengths', start:'top 80%'}
-});
-
-/* ---------- KPI count-up ---------- */
-document.querySelectorAll('.count').forEach(el=>{
-  const to = parseFloat(el.dataset.to);
-  const obj = {v:0};
-  ScrollTrigger.create({
-    trigger: el, start:'top 85%', once:true,
-    onEnter: ()=>{
-      gsap.to(obj,{v:to, duration:2, ease:'power2.out',
-        onUpdate:()=>{ el.textContent = Math.round(obj.v); }});
-    }
-  });
-});
-
-/* ---------- Magnetic button ---------- */
-const mag = document.getElementById('magnetic');
-const magWrap = mag.parentElement;
-magWrap.addEventListener('mousemove', e=>{
-  const r = mag.getBoundingClientRect();
-  const cx = r.left + r.width/2, cy = r.top + r.height/2;
-  const dx = (e.clientX - cx);
-  const dy = (e.clientY - cy);
-  const max = 12;
-  const nx = Math.max(-max, Math.min(max, dx*0.35));
-  const ny = Math.max(-max, Math.min(max, dy*0.35));
-  gsap.to(mag, {x:nx, y:ny, duration:0.4, ease:'power3.out'});
-});
-magWrap.addEventListener('mouseleave', ()=>{
-  gsap.to(mag, {x:0, y:0, duration:0.6, ease:'elastic.out(1, 0.4)'});
-});
-
-/* ---------- Refresh on load ---------- */
-addEventListener('load', ()=> ScrollTrigger.refresh());
+  // Print-mode: skip GSAP animations entirely. Wait for fonts then print.
+  document.documentElement.classList.add('print-ready');
+  // Duplicate marquee track for visual symmetry only
+  try {
+    const t = document.getElementById('marqueeTrack');
+    if (t) t.innerHTML = t.innerHTML + t.innerHTML;
+  } catch(e){}
+  function go(){
+    setTimeout(() => { try { window.print(); } catch(e){} }, 500);
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(go, go);
+  } else {
+    window.addEventListener('load', go);
+  }
 </script>
 </body>
 </html>
